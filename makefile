@@ -1,9 +1,12 @@
 PRGNAME     = handy
-CC			= /opt/bittboy-toolchain/bin/arm-linux-gcc
-CXX 		= /opt/bittboy-toolchain/bin/arm-linux-g++
+# PRGNAME     = Lynx.pak/handy # TODO: tmp
+
+CROSS_COMPILE := /opt/trimui-toolchain/bin/arm-buildroot-linux-gnueabi-
+CC			= $(CROSS_COMPILE)gcc
+CXX			= $(CROSS_COMPILE)g++
 
 PORT = RS97
-SOUND_OUTPUT = alsa
+SOUND_OUTPUT = sdl12
 PROFILE = APPLY
 
 SRCDIR		= ./src/ ./src/gui/ ./src/handy-libretro src/ports ./src/ports/input/sdl src/sdlemu ./src/unzip
@@ -29,7 +32,7 @@ CFLAGS		+= -fprofile-use -fbranch-probabilities
 endif
 
 CXXFLAGS	= $(CFLAGS)
-LDFLAGS     = -nodefaultlibs -lc -lstdc++ -lgcc -lm -lSDL -lz -no-pie -Wl,--as-needed -Wl,--gc-sections -s -flto
+LDFLAGS     = -nodefaultlibs -lc -lstdc++ -lgcc -lgcc_s -lm -lSDL -lz -no-pie -Wl,--as-needed -Wl,--gc-sections -s -flto
 
 ifeq ($(SOUND_OUTPUT), portaudio)
 LDFLAGS		+= -lportaudio
