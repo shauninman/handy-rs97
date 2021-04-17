@@ -378,17 +378,20 @@ void gui_MainMenuRun(MENU *menu)
 			if(gui_event.type == SDL_KEYDOWN) {
 				// DINGOO A - apply parameter or enter submenu
 				//if(gui_event.key.keysym.sym == SDLK_RETURN) if(mi->itemOnA != NULL) (*mi->itemOnA)();
-				if(gui_event.key.keysym.sym == SDLK_LCTRL)
-				{
-					if(mi->itemOnA != NULL) (*mi->itemOnA)();
-				}
+				// if(gui_event.key.keysym.sym == SDLK_LCTRL) if(mi->itemOnA != NULL) (*mi->itemOnA)();
+				if(gui_event.key.keysym.sym == SDLK_SPACE) if(mi->itemOnA != NULL) (*mi->itemOnA)(); // TRIMUI A
+				
 				// DINGOO B - exit or back to previous menu
 				//if(gui_event.key.keysym.sym == SDLK_ESCAPE) return;
-				if(gui_event.key.keysym.sym == SDLK_LALT) return;
+				// if(gui_event.key.keysym.sym == SDLK_LALT) return;
+				if(gui_event.key.keysym.sym == SDLK_LCTRL) return; // TRIMUI B
+				
 				// DINGOO UP - arrow down
 				if(gui_event.key.keysym.sym == SDLK_UP) if(--menu->itemCur < 0) menu->itemCur = menu->itemNum - 1;
+				
 				// DINGOO DOWN - arrow up
 				if(gui_event.key.keysym.sym == SDLK_DOWN) if(++menu->itemCur == menu->itemNum) menu->itemCur = 0;
+				
 				// DINGOO LEFT - decrease parameter value
 				if(gui_event.key.keysym.sym == SDLK_LEFT) {
 					if(mi->itemPar != NULL && *mi->itemPar > 0) *mi->itemPar -= 1;
