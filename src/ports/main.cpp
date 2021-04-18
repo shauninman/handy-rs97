@@ -92,6 +92,14 @@ int              LynxRotate;                // Lynx ROM rotation type
 
 int                 emulation = 0;
 
+#include <dlfcn.h>
+extern "C" {
+	#include <mmenu.h>
+}
+void* mmenu = NULL;
+char rom_path[256];
+char save_path[256];
+int resume_slot = -1;
 
 /*
     Name                :     handy_sdl_update
@@ -347,6 +355,8 @@ int main(int argc, char *argv[])
     {
 		snprintf(romname, sizeof(romname), "%s", argv[1]);
 	}
+	
+	strcpy(rom_path, romname);
 
     for ( i=0; (i < argc || argv[i] != NULL ); i++ )
     {
@@ -365,7 +375,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "FAILED : Unable to init SDL: %s\n", SDL_GetError());
         return 1;
     }
-    
+	
     #ifndef NOJOYSTICK
 	if(SDL_NumJoysticks() > 0)
 		joystick = SDL_JoystickOpen(0);
@@ -374,7 +384,7 @@ int main(int argc, char *argv[])
 
     // Primary initalise of Handy - should be called AFTER SDL_Init() but BEFORE handy_sdl_video_setup()
     handy_sdl_core_init(romname);
-
+	
     // Initialise Handy/SDL video 
     if(!Handy_Init_Video())
     {
@@ -395,6 +405,16 @@ int main(int argc, char *argv[])
 
     // Init gui (move to some other place later)
     gui_Init();
+
+	mmenu = dlopen("libmmenu.so", RTLD_LAZY);
+	if (mmenu) {
+		ResumeSlot_t ResumeSlot = (ResumeSlot_t)dlsym(mmenu, "ResumeSlot");
+		if (ResumeSlot) resume_slot = ResumeSlot();
+	}
+	if (resume_slot!=-1) {
+		gui_LoadSlot = resume_slot;
+		gui_LoadState();
+	}
 
     printf("Starting Lynx Emulation...\n");
     while(!emulation)

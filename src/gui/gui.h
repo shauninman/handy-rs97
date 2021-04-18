@@ -21,6 +21,12 @@ void gui_CountFPS();
 void gui_Run();
 void gui_Init(); 
 
-int gui_LoadFile(char *romname);
+int gui_LoadFile(char *romname); // NOTE: this function is never defined?
+
+// mmenu
+extern int gui_LoadSlot;
+void gui_SaveStatePath(char *buf, size_t len);
+void gui_LoadState();
+void gui_SaveState();
 
 #endif

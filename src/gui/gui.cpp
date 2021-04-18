@@ -59,8 +59,6 @@ SDL_Surface *menuSurface = NULL, *Game_Surface_Preview; // menu rendering
 
 int Invert = 0;
 
-void gui_LoadState();
-void gui_SaveState();
 void gui_FileBrowserRun();
 void gui_ConfigMenuRun();
 void gui_Reset();
@@ -189,6 +187,11 @@ void ShowMenuItem(int x, int y, MENUITEM *m, int fg_color)
 		}
 		print_string(i_str, fg_color, COLOR_BG, x, y);
 	}
+}
+
+void gui_SaveStatePath(char *buf, size_t len)
+{
+  snprintf(buf, len, "%s/%s.%%i.sav", config_full_path, rom_name_with_no_ext);
 }
 
 void gui_LoadState()

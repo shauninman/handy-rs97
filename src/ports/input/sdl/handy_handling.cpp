@@ -66,6 +66,12 @@
 #include "handy_sdl_main.h"
 #include "handy_sdl_handling.h"
 #include "handy_sdl_graphics.h"
+#include "../gui/gui.h"
+
+#include <dlfcn.h>
+extern "C" {
+	#include <mmenu.h>
+}
 
 extern int Invert;
 extern int gui_SwapAB;
@@ -218,7 +224,31 @@ uint32_t Joystick_Down(uint32_t mask, SDL_Event event)
 							#ifdef IPU_SCALE
 							Handy_Change_Res(1);
 							#endif
-							gui_Run();
+							if (mmenu) {
+								ShowMenu_t ShowMenu = (ShowMenu_t)dlsym(mmenu, "ShowMenu");
+								gui_SaveStatePath(save_path, 256);
+								MenuReturnStatus status = ShowMenu(rom_path, save_path, mainSurface, kMenuEventKeyDown);
+
+								if (status==kStatusExitGame) {
+									// exiting varies from emulator to emulator
+									// see its menu() function to determine how
+									handy_sdl_quit();
+								}
+								else if (status==kStatusOpenMenu) {
+									gui_Run();
+								}
+								else if (status>=kStatusLoadSlot) {
+									gui_LoadSlot = status - kStatusLoadSlot;
+									gui_LoadState();
+								}
+								else if (status>=kStatusSaveSlot) {
+									gui_LoadSlot = status - kStatusSaveSlot;
+									gui_SaveState();
+								}
+							}
+							else {
+								gui_Run();
+							}
 							#ifdef IPU_SCALE
 							Handy_Change_Res(0);
 							#endif

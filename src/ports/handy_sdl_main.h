@@ -90,6 +90,11 @@ extern int				stype;					// Scaling/Scanline Routine
 extern int              filter;					// Output Filter
 extern uint32_t           overlay_format;         // YUV Overlay format
 
+extern void* mmenu;
+extern char rom_path[256];
+extern char save_path[256];
+extern int resume_slot;
+
 inline	int 	handy_sdl_update(void);
 		void 	handy_sdl_rom_info(void);
 		int 	main(int argc, char *argv[]);
