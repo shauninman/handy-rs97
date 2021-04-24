@@ -28,5 +28,6 @@ extern int gui_LoadSlot;
 void gui_SaveStatePath(char *buf, size_t len);
 void gui_LoadState();
 void gui_SaveState();
+void gui_ClearScreen();
 
 #endif

@@ -265,6 +265,8 @@ void handy_sdl_quit(void)
 
 static void Cleanup_mess(void)
 {
+	gui_ClearScreen();
+	
     // Disable audio and set emulation to pause, then quit :)
     handy_audio_close();
     
