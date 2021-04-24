@@ -7,7 +7,7 @@ CXX			= $(CROSS_COMPILE)g++
 
 PORT = RS97
 SOUND_OUTPUT = sdl12
-PROFILE = NO
+PROFILE = APPLY
 
 SRCDIR		= ./src/ ./src/gui/ ./src/handy-libretro src/ports ./src/ports/input/sdl src/sdlemu ./src/unzip
 VPATH		= $(SRCDIR)
@@ -32,7 +32,8 @@ CFLAGS		+= -fprofile-use=profile -fbranch-probabilities
 endif
 
 CXXFLAGS	= $(CFLAGS)
-LDFLAGS     = -nodefaultlibs -lc -lstdc++ -lgcc -lgcc_s -lm -lSDL -lz -no-pie -Wl,--gc-sections -s -flto
+LDFLAGS     = -nodefaultlibs -lc -lstdc++ -lgcc -lgcc_s -lm -lSDL -lz -no-pie -Wl,--gc-sections -s
+# LDFLAGS	   += -flto
 LDFLAGS    += -lSDL_image -lSDL_ttf -ldl
 
 ifeq ($(SOUND_OUTPUT), portaudio)
