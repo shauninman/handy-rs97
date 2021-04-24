@@ -26,6 +26,7 @@
 #include <SDL/SDL.h>
 #include <libgen.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #include "gui.h"
 #include "font.h"
@@ -125,6 +126,46 @@ MENU gui_ConfigMenu = { 2
 	#endif
 , 0, (MENUITEM *)&gui_ConfigMenuItems };
 
+
+typedef struct {
+	int imageScaling;
+	int swapAB;
+} gamecfg;
+static gamecfg GameConf;
+
+static void initConf(void) {
+	GameConf.imageScaling = 0;
+	GameConf.swapAB = 0;
+}
+static void loadConf(void) {
+	char cfg_name[MAX__PATH];
+	snprintf(cfg_name, sizeof(cfg_name), "%s/handy.cfg", config_full_path);
+	
+    int32_t fd;
+    fd = open(cfg_name, O_RDONLY);
+    if (fd >= 0) {
+  		read(fd, &GameConf, sizeof(GameConf));
+		close(fd);
+		
+		gui_ImageScaling = GameConf.imageScaling;
+		gui_SwapAB = GameConf.swapAB;
+    }
+}
+static void saveConf(void) {
+	char cfg_name[MAX__PATH];
+	snprintf(cfg_name, sizeof(cfg_name), "%s/handy.cfg", config_full_path);
+	
+	int fd;
+	fd = open(cfg_name, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
+	
+	if (fd >= 0) {
+		GameConf.imageScaling = gui_ImageScaling;
+		GameConf.swapAB = gui_SwapAB;
+		
+		write(fd, &GameConf, sizeof(GameConf)); 
+		close(fd);
+	}
+}
 
 /*
 	Clears mainSurface
@@ -387,7 +428,7 @@ void gui_MainMenuRun(MENU *menu)
 				// DINGOO B - exit or back to previous menu
 				//if(gui_event.key.keysym.sym == SDLK_ESCAPE) return;
 				// if(gui_event.key.keysym.sym == SDLK_LALT) return;
-				if(gui_event.key.keysym.sym == SDLK_LCTRL) return; // TRIMUI B
+				if(gui_event.key.keysym.sym == SDLK_LCTRL) return saveConf(); // TRIMUI B
 				
 				// DINGOO UP - arrow down
 				if(gui_event.key.keysym.sym == SDLK_UP) if(--menu->itemCur < 0) menu->itemCur = menu->itemNum - 1;
@@ -428,6 +469,7 @@ void get_config_path()
 void gui_Init()
 {
 	get_config_path();
+	loadConf();
 }
 
 void gui_Run()
