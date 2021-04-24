@@ -1,5 +1,4 @@
 PRGNAME     = handy
-# PRGNAME     = Lynx.pak/handy # TODO: tmp
 
 CROSS_COMPILE := /opt/trimui-toolchain/bin/arm-buildroot-linux-gnueabi-
 CC			= $(CROSS_COMPILE)gcc
