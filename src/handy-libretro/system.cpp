@@ -640,6 +640,7 @@ bool CSystem::ContextSave(const char *context)
    if(!mCpu->ContextSave(fp)) status=0;
 
    fclose(fp);
+   sync();
    return status;
 }
 
